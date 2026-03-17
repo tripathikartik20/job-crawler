@@ -18,6 +18,8 @@ A full-stack application that **crawls LinkedIn jobs**, analyzes your resume, an
 
 ---
 
+# **Project Demo** - https://job-crawler-xiw4.onrender.com/
+
 # ⚡ Key Features
 
 * 🔍 **LinkedIn Job Search** — Search by role, keywords, and location
