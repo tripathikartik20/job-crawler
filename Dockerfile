@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
 RUN npm install -g pnpm@10
 
 # ── Install dependencies ──────────────────────────────────────────────────────
@@ -17,7 +17,6 @@ RUN pnpm install --frozen-lockfile
 # ── Build ─────────────────────────────────────────────────────────────────────
 FROM deps AS builder
 WORKDIR /app
-# Copy all source
 COPY . .
 
 # Build frontend (output: artifacts/job-crawler/dist/public/)
@@ -27,7 +26,7 @@ RUN BASE_PATH=/ pnpm --filter @workspace/job-crawler run build
 RUN pnpm --filter @workspace/api-server run build
 
 # ── Production image ──────────────────────────────────────────────────────────
-FROM node:20-alpine AS runner
+FROM node:20-slim AS runner
 RUN npm install -g pnpm@10
 WORKDIR /app
 
@@ -44,7 +43,6 @@ COPY --from=builder /app/artifacts/job-crawler/dist/public ./public
 
 # Install only production deps (pdf-parse, pg, cheerio, etc.)
 RUN pnpm install --prod --filter @workspace/api-server --no-frozen-lockfile 2>/dev/null || true
-# Ensure pdf-parse is available at runtime
 RUN npm install pdf-parse cheerio --no-save 2>/dev/null || true
 
 EXPOSE 8080
