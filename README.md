@@ -1,150 +1,219 @@
-JobCrawler — LinkedIn Job Search with AI Matching
-A full-stack web application that crawls LinkedIn for job listings, parses your resume (PDF or text), and uses AI to score and rank each job by how well it fits your background.
+<!-- 🔥 HERO HEADER -->
 
-Unsupported image
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,100:2c5364&height=220&section=header&text=JobCrawler&fontSize=45&fontColor=ffffff&animation=fadeIn&fontAlignY=35" />
+</p>
 
-Features
-LinkedIn Job Search — Search jobs by title, keywords, and location
-Resume Upload — Drag-and-drop a PDF or paste plain text
-AI Match Scoring — Each job is scored 0–100 against your resume using GPT-4o-mini, with a plain-English explanation
-Auto-Save — All results are saved to a PostgreSQL database
-CSV Export — Download your saved jobs as a spreadsheet
-Dark UI — Clean, responsive dark theme with mobile support
-Tech Stack
-Layer	Technology
-Frontend	React 19, Vite, Tailwind CSS v4, Framer Motion
-Backend	Express 5, TypeScript, Node.js 20
-Database	PostgreSQL (Neon serverless) + Drizzle ORM
-AI	OpenAI GPT-4o-mini
-Package Manager	pnpm (monorepo)
-Deployment	Docker
-Project Structure
-├── artifacts/
-│   ├── api-server/        # Express backend (port 8080)
-│   └── job-crawler/       # React + Vite frontend
-├── lib/
-│   ├── db/                # Drizzle ORM schema & client
-│   ├── api-zod/           # Shared Zod validation schemas
-│   └── api-client-react/  # React Query API hooks
-├── Dockerfile             # Single-container build (frontend + backend)
-├── docker-compose.yml     # Local Docker testing
-└── LOCAL_SETUP.md         # Local development guide
-Prerequisites
-Node.js 20+
-pnpm 10+ — npm install -g pnpm
-Neon account (free tier) — for PostgreSQL
-OpenAI API key
-Local Development Setup
-1. Clone and install
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?color=00F7FF&size=24&center=true&vCenter=true&width=700&lines=AI-Powered+LinkedIn+Job+Search;Resume+Matching+Engine;Full-Stack+Production+App;Built+with+React+%2B+Node+%2B+AI" />
+</p>
+
+---
+
+# 🚀 JobCrawler — AI-Powered LinkedIn Job Matching
+
+A full-stack application that **crawls LinkedIn jobs**, analyzes your resume, and uses AI to **score and rank jobs (0–100)** based on how well they match your profile.
+
+> 💡 Built to simulate real-world AI-driven recruitment and job intelligence systems.
+
+---
+
+# ⚡ Key Features
+
+* 🔍 **LinkedIn Job Search** — Search by role, keywords, and location
+* 📄 **Resume Upload** — PDF upload or raw text input
+* 🧠 **AI Match Scoring** — GPT-powered scoring + human-readable explanations
+* 💾 **Auto Save System** — Persistent job storage (PostgreSQL)
+* 📊 **CSV Export** — Export saved jobs instantly
+* 🌙 **Modern Dark UI** — Fully responsive & clean UX
+
+---
+
+# 🧠 Why This Project Matters
+
+This project demonstrates:
+
+* Real-world **AI integration (OpenAI)**
+* Full-stack architecture with **scalable backend + modern frontend**
+* Handling **external scraping + fallback systems**
+* Designing **production-ready systems with persistence & exports**
+
+👉 Not just a project — this is a **mini job intelligence platform**
+
+---
+
+# 🏗️ Tech Stack
+
+| Layer     | Technology                                     |
+| --------- | ---------------------------------------------- |
+| Frontend  | React 19, Vite, Tailwind CSS v4, Framer Motion |
+| Backend   | Express 5, TypeScript, Node.js 20              |
+| Database  | PostgreSQL (Neon) + Drizzle ORM                |
+| AI        | OpenAI GPT-4o-mini                             |
+| Dev Tools | pnpm (monorepo), Docker                        |
+
+---
+
+# 📁 Project Structure
+
+```
+artifacts/
+ ├── api-server/        # Express backend (port 8080)
+ └── job-crawler/       # React frontend
+
+lib/
+ ├── db/                # Database schema & client
+ ├── api-zod/           # Validation schemas
+ └── api-client-react/  # API hooks
+
+Dockerfile
+docker-compose.yml
+```
+
+---
+
+# ⚙️ Local Setup
+
+## 1️⃣ Clone & Install
+
+```
 git clone https://github.com/your-username/your-repo.git
 cd your-repo
 pnpm install
-2. Create a Neon database
-Sign up at neon.tech
-Create a new project
-Copy the Connection string from the dashboard
-3. Configure environment variables
-Create lib/db/.env:
+```
 
-DATABASE_URL=postgresql://user:password@host.neon.tech/dbname?sslmode=require
-Create artifacts/api-server/.env:
+## 2️⃣ Setup Database (Neon)
 
-DATABASE_URL=postgresql://user:password@host.neon.tech/dbname?sslmode=require
-OPENAI_API_KEY=sk-...
+* Create account → https://neon.tech
+* Create project → copy connection string
+
+## 3️⃣ Environment Variables
+
+### `/lib/db/.env`
+
+```
+DATABASE_URL=your_neon_db_url
+```
+
+### `/artifacts/api-server/.env`
+
+```
+DATABASE_URL=your_neon_db_url
+OPENAI_API_KEY=your_key
 PORT=8080
-Create artifacts/job-crawler/.env:
+```
 
+### `/artifacts/job-crawler/.env`
+
+```
 PORT=5173
 BASE_PATH=/
-4. Push database schema
+```
+
+---
+
+## 4️⃣ Push Schema
+
+```
 pnpm --filter @workspace/db run push
-5. Start the dev servers
-Open two terminals:
+```
 
-# Terminal 1 — API server
+## 5️⃣ Start Dev Servers
+
+```
+# Backend
 pnpm --filter @workspace/api-server run dev
-# Terminal 2 — Frontend
+
+# Frontend
 pnpm --filter @workspace/job-crawler run dev
-Open http://localhost:5173
+```
 
-Docker (Local Testing)
+👉 Open: http://localhost:5173
+
+---
+
+# 🐳 Docker Setup
+
+```
 cp .env.example .env
-# Edit .env with your DATABASE_URL and OPENAI_API_KEY
 docker compose up --build
-Open http://localhost:8080
+```
 
-Deploying to Render (Recommended)
-Render automatically detects the Dockerfile and builds a single container serving both the API and the frontend.
+👉 Runs full stack on **port 8080**
 
-Steps
-Push your code to GitHub
+---
 
-Go to render.com → New → Web Service → Connect your GitHub repo
+# 🚀 Deployment
 
-Configure the service:
+## 🌐 Render (Recommended)
 
-Environment: Docker
-Port: 8080
-Add environment variables in the Render dashboard:
+* Auto-detects Docker
+* Set env variables
+* Deploy → get HTTPS URL
 
-Key	Value
-DATABASE_URL	postgresql://...neon.tech/...?sslmode=require
-OPENAI_API_KEY	sk-...
-STATIC_DIR	/app/public
-PORT	8080
-Deploy — Render builds the Docker image and gives you a public HTTPS URL
+## ☁️ AWS
 
-Run the database migration (once)
-After your first deploy, run the schema push from your local machine pointing at your Neon database:
+* App Runner → easiest
+* EC2 + Docker → full control
 
-DATABASE_URL="your-neon-connection-string" pnpm --filter @workspace/db run push
-Deploying to AWS
-Option A — AWS App Runner (easiest)
-Push code to GitHub
-Open AWS App Runner → Create service → Source: GitHub
-Runtime: Docker
-Port: 8080
-Add the same 4 environment variables listed above
-Deploy — App Runner handles scaling and HTTPS automatically
-Option B — EC2 with Docker
-# On your EC2 instance
-sudo apt install docker.io git -y
-sudo systemctl start docker
-# Clone or upload your repo
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
-cp .env.example .env
-nano .env   # fill in your values
-sudo docker build -t job-crawler .
-sudo docker run -d --env-file .env -p 80:8080 --restart always job-crawler
-Deploying to Railway
-Push code to GitHub
-Go to railway.app → New Project → Deploy from GitHub repo
-Railway auto-detects the Dockerfile
-Add the 4 environment variables in the Railway dashboard
-Done — Railway provides a public URL with HTTPS
-Environment Variables Reference
-Variable	Required	Description
-DATABASE_URL	Yes	PostgreSQL connection string
-OPENAI_API_KEY	Yes	OpenAI API key for AI job matching
-STATIC_DIR	Yes (production)	Path to built frontend files (/app/public in Docker)
-PORT	Yes	Server port (use 8080)
-OPENAI_MODEL	No	Override AI model (default: gpt-4o-mini)
-API Endpoints
-Method	Path	Description
-GET	/api/healthz	Health check
-GET	/api/jobs/search?q=...&location=...	Search LinkedIn jobs
-GET	/api/jobs/saved	List saved jobs
-POST	/api/jobs/save	Save a job
-DELETE	/api/jobs/:id	Delete a saved job
-GET	/api/jobs/export	Export saved jobs as CSV
-GET	/api/resume	Get saved resume
-POST	/api/resume	Save resume text
-POST	/api/resume/upload	Upload PDF resume
-Notes
-LinkedIn scraping may be rate-limited or blocked by LinkedIn. The app automatically falls back to realistic mock data when this happens, so the UI always works.
-AI matching only activates after you upload a resume on the Resume page.
-The OPENAI_MODEL env var lets you use a different model (e.g., gpt-4o for higher quality at higher cost).
-License
-MIT
+## 🚄 Railway
 
+* One-click GitHub deploy
+* Auto HTTPS
+
+---
+
+# 🔑 Environment Variables
+
+| Variable       | Required | Description              |
+| -------------- | -------- | ------------------------ |
+| DATABASE_URL   | ✅        | PostgreSQL connection    |
+| OPENAI_API_KEY | ✅        | AI scoring               |
+| STATIC_DIR     | ⚠️       | Production frontend path |
+| PORT           | ✅        | Server port              |
+| OPENAI_MODEL   | ❌        | Optional model override  |
+
+---
+
+# 🔌 API Endpoints
+
+| Method | Endpoint           | Description    |
+| ------ | ------------------ | -------------- |
+| GET    | /api/healthz       | Health check   |
+| GET    | /api/jobs/search   | Search jobs    |
+| GET    | /api/jobs/saved    | Get saved jobs |
+| POST   | /api/jobs/save     | Save job       |
+| DELETE | /api/jobs/:id      | Delete job     |
+| GET    | /api/jobs/export   | Export CSV     |
+| POST   | /api/resume        | Save resume    |
+| POST   | /api/resume/upload | Upload PDF     |
+
+---
+
+# ⚠️ Notes
+
+* LinkedIn scraping may fail → app uses fallback mock data
+* AI scoring activates only after resume upload
+* Model can be changed via `OPENAI_MODEL`
+
+---
+
+# 🧠 Future Improvements
+
+* 🔐 Authentication system
+* 📈 Job trend analytics
+* 🤖 Better AI ranking models
+* 📬 Email alerts for matched jobs
+
+---
+
+# 💣 Final Thought
+
+> This project combines **AI + scraping + full-stack engineering**
+> — exactly what modern production systems look like.
+
+---
+
+<p align="center">
+  ⭐ Star this repo if you found it useful
+</p>
