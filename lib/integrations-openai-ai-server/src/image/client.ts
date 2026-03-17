@@ -2,28 +2,35 @@ import fs from "node:fs";
 import OpenAI, { toFile } from "openai";
 import { Buffer } from "node:buffer";
 
-if (!process.env.AI_INTEGRATIONS_OPENAI_BASE_URL) {
-  throw new Error(
-    "AI_INTEGRATIONS_OPENAI_BASE_URL must be set. Did you forget to provision the OpenAI AI integration?",
+function createClient(): OpenAI {
+  const replitBase = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
+  const replitKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+
+  if (!replitBase && !openaiKey) {
+    throw new Error(
+      "Missing OpenAI credentials. Set OPENAI_API_KEY in your environment variables."
+    );
+  }
+
+  return new OpenAI(
+    replitBase && replitKey
+      ? { apiKey: replitKey, baseURL: replitBase }
+      : { apiKey: openaiKey! }
   );
 }
 
-if (!process.env.AI_INTEGRATIONS_OPENAI_API_KEY) {
-  throw new Error(
-    "AI_INTEGRATIONS_OPENAI_API_KEY must be set. Did you forget to provision the OpenAI AI integration?",
-  );
+let _client: OpenAI | null = null;
+function getClient(): OpenAI {
+  if (!_client) _client = createClient();
+  return _client;
 }
-
-export const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-});
 
 export async function generateImageBuffer(
   prompt: string,
   size: "1024x1024" | "512x512" | "256x256" = "1024x1024"
 ): Promise<Buffer> {
-  const response = await openai.images.generate({
+  const response = await getClient().images.generate({
     model: "gpt-image-1",
     prompt,
     size,
@@ -39,13 +46,11 @@ export async function editImages(
 ): Promise<Buffer> {
   const images = await Promise.all(
     imageFiles.map((file) =>
-      toFile(fs.createReadStream(file), file, {
-        type: "image/png",
-      })
+      toFile(fs.createReadStream(file), file, { type: "image/png" })
     )
   );
 
-  const response = await openai.images.edit({
+  const response = await getClient().images.edit({
     model: "gpt-image-1",
     image: images,
     prompt,
