@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      NODE_ENV: production
+      STATIC_DIR: /app/public
+      # Set these in a .env file or pass directly:
+      DATABASE_URL: ${DATABASE_URL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      # Optional: override the AI model (default: gpt-4o-mini)
+      # OPENAI_MODEL: gpt-4o
+    restart: unless-stopped
